@@ -711,6 +711,7 @@ int Battle()
                         int zarab = 200 * Random(1, 5);
                         int XP = 100 * Random(1, 5);
                         cout << "\nВы заработали: " << zarab << " золота" << "\nВы заработали: " << XP << " опыта";
+                        Veshi();
                         xp += XP;
                         gold += zarab;
                         for (int i = 0; i < 10; i++)
@@ -803,11 +804,13 @@ int Battle()
 
 
         j = 1;
+        string jkle[11];
         for (int i = 0; i < 10; i++) //вывели свои отряды для атак
         {
             if (army[i][0] != "")
             {
                 cout << j << ". " << army[i][0] << "\n";
+                jkle[j] = army[i][0];
                 j++;
             }
         }
@@ -816,18 +819,17 @@ int Battle()
         cin >> u;
         for (int i = 0; i < 10; i++)
         {
-            if (army[u - 1][0] == "")
+            if (jkle[u] == army[i][0])
             {
-                u++;
-            }
-            if (army[u - 1][0] == mas[i][0])
-            {
+                u = i;
                 break;
             }
         }
+        u++;
+
         int att, def, healt, reg;
-        string name, atttp;
-        name = army[u - 1][0];
+        string name1, atttp;
+        name1 = army[u - 1][0];
         atttp = army[u - 1][5];
         att = atoi(army[u - 1][1].c_str());
         def = atoi(army[u - 1][2].c_str());
@@ -838,51 +840,29 @@ int Battle()
         cout << "\n\n";
         int enu;
         j = 1;
+        string jkle1[11];
         for (int i = 0; i < 10; i++) //вывели отряды противника для атак
         {
             if (enemyarmy[i][0] != "")
             {
                 cout << j << ". " << enemyarmy[i][0] << "\n";
+                jkle1[j] = enemyarmy[i][0];
                 j++;
             }
         }
         cout << "\nВыберите отряд противника, для атаки: "; //выбираем отряд для атаки
         cin >> enu;
 
-        bool iii = true;
-        for (int i = 0; i < 10; i++) //Находим свободную ячейку
+        for (int i = 0; i < 10; i++)
         {
-            if (enemyarmy[enu - 1][0] == mas[i][0]) //Если уже есть такой тип войск
-            {							//То записываем её индекс
-                /*h = i;*/
-                iii = false;
+            if (jkle1[enu] == enemyarmy[i][0])
+            {
+                enu = i;
                 break;
             }
         }
-        if (iii == true)
-        {
-            for (int i = 0; i < 10; i++) //Находим свободную ячейку
-            {
-                if (enemyarmy[enu - 1][0] == "") //Если находим пустую, то записываем в пустую
-                {
-                    enu++;
-                    break;
-                }
-            }
-        }
+        enu++;
 
-        /*for (int i = 0; i < 10; i++)
-        {
-            if (enemyarmy[enu - 1][0] == "")
-            {
-                enu++;
-            }
-            if (enemyarmy[enu - 1][0] == mas[i][0])
-            {
-                //u = i;
-                break;
-            }
-        }*/
         int enatt, endef, enhealt, enreg;
         string enname, enatttp;
         enname = enemyarmy[enu - 1][0];
@@ -993,6 +973,7 @@ int Battle()
 
             health -= damage * 10;
             cout << "\nВы заработали: " << zarab << " золота" << "\nВы заработали: " << XP << " опыта";
+            Veshi();
             xp += XP;
             gold += zarab;
             Sleep(2000);
@@ -1026,6 +1007,7 @@ int Battle()
                 int zarab = 200 * Random(1, 5);
                 int XP = 100 * Random(1, 5);
                 cout << "\nВы заработали: " << zarab << " золота" << "\nВы заработали: " << XP << " опыта";
+                Veshi();
                 xp += XP;
                 gold += zarab;
                 for (int i = 0; i < 10; i++)
@@ -1060,41 +1042,32 @@ int Battle()
                 {
                     if (enemyarmy[i][0] != "")
                     {
-                        //cout << "\n\n";
                         ind1[k1] = i;
-                        //cout << enemyarmy[i][0];
-                        //cout << "\n" << ind1[k1] << "\n";
-                        //cout << j1;
                         k1++;
                         j1++;
                     }
                 }
-                //int j1 = 1;
-                /*int ind1[16];
-                for (int i = 0; i < 10; i++) //вывели свои отряды для атак
+
+                int rak = 0;
+                att3:
+                rak = Random(0, j1);
+                if (rak < 0)
+                    goto att3;
+                bool tik = true;
+                for (int i = 0; i < 10; i++)
                 {
-                    if (enemyarmy[i][0] != "")
+                    if (rak == ind1[i])
                     {
-                        j1++;
-                        ind1[i] = i;
-                    }
-                }*/
-                att3: enu = Random(1, j1);
-                bool ExitFlag;
-                for (int j = 0; j < 10; j++)
-                {
-                    if (ind1[j] != enu)
-                        ExitFlag = false;
-                    else
-                    {
-                        ExitFlag = true;
+                        enu = ind1[i];
+                        enu++;
+                        tik = false;
                         break;
                     }
                 }
-                if (ExitFlag == false)
-                {
+                cout << rak << "\n";
+                if (tik == true)
                     goto att3;
-                }
+
                 enname = enemyarmy[enu - 1][0];
                 enatttp = enemyarmy[enu - 1][5];
                 enatt = atoi(enemyarmy[enu - 1][1].c_str());
@@ -1111,41 +1084,34 @@ int Battle()
                 {
                     if (army[i][0] != "")
                     {
-                        //cout << "\n\n";
                         ind[k] = i;
-                        //cout << army[i][0];
-                        //cout << "\n" << ind[k] << "\n";
-                        //cout << j;
                         k++;
                         j++;
                     }
                 }
 
-                /*int ch; char code;
-                while (1)
+                att2:
+                bool tik1 = true;
+                int rak1 = 0;
+                while (tik1 == true)
                 {
-                    ch = _getch();
-                    code = static_cast<int>(ch);
-                    if (ch == 13) // если клавиша Enter
-                        break;
-                }*/
-
-                att2: u = Random(1, j);
-                bool ExitFlag1;
-                for (int j = 0; j < k; j++)
-                {
-                    if (ind[j] != u)
-                        ExitFlag1 = false;
-                    else
+                    rak1 = 0;
+                    rak1 = Random(0, 9);
+                    for (int i = 0; i < 10; i++)
                     {
-                        ExitFlag1 = true;
-                        break;
+                        if (rak1 == ind[i])
+                        {
+                            u = ind[i];
+                            u++;
+                            tik1 = false;
+                            break;
+                        }
                     }
+                    if (tik1 == true)
+                        break;
                 }
-                if (ExitFlag1 == false)
-                    goto att2;
-                u++;
-                name = army[u - 1][0];
+
+                name1 = army[u - 1][0];
                 atttp = army[u - 1][5];
                 att = atoi(army[u - 1][1].c_str());
                 def = atoi(army[u - 1][2].c_str());
@@ -1202,8 +1168,6 @@ int Battle()
                 ////////////////////бой
 
                 system("cls");
-                cout << u;
-                cout << "\n" << army[u - 1][0];
                 cout << "\nОтряд '" << pname << "' противника нанес " << enataka << " едениц урона вашему отряду '" << apname << "' и получил " << ataka << " единиц урона в ответ";
                 cout << "\nУ вашего отряда '" << apname << "' осталось " << healt << " единиц здоровья.";
                 cout << "\nУ отряда '" << pname << "' противника осталось " << enhealt << " единиц здоровья.";
@@ -1246,6 +1210,7 @@ int Battle()
 
                     health -= damage * 10;
                     cout << "\nВы заработали: " << zarab << " золота" << "\nВы заработали: " << XP << " опыта";
+                    Veshi();
                     xp += XP;
                     gold += zarab;
                     Sleep(2000);
@@ -1279,6 +1244,7 @@ int Battle()
                         int zarab = 200 * Random(1, 5);
                         int XP = 100 * Random(1, 5);
                         cout << "\nВы заработали: " << zarab << " золота" << "\nВы заработали: " << XP << " опыта";
+                        Veshi();
                         xp += XP;
                         gold += zarab;
                         for (int i = 0; i < 10; i++)
