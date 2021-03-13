@@ -72,6 +72,13 @@ public:
     string attacktype = "";
 };
 
+int Random1(int a,int b)
+{
+    srand(time(NULL));
+    if (a >= 0) return a + rand() % (b - a);
+    else return a + rand() % (abs(a) + b);
+}
+
 int Random(int min, int max) //Генератор рандомных числе в диапазоне
 {
     std::random_device random_device;
@@ -81,7 +88,7 @@ int Random(int min, int max) //Генератор рандомных числе 
     return x;
 }
 
-void Random_army()
+int Random_army()
 {
     int t = 0;
     bool boss = false;
@@ -112,15 +119,16 @@ void Random_army()
     for (int i = 0; i < t; i++)
     {
         stt1: t1 = 0;
+        //cout << i << "\n\n";
         if (t1 == 0)
         {
-            hjrg1: t2 = Random(0, 9);
+            hjrg1: t2 = Random1(0, 9);
             if (mas[t2][0] == "Немецкий Африканский Танковый Корпус" && boss == false)
                 goto hjrg1;
             for (int i = 0; i < arraySize; i++)
             {
                 if (ma[i] == t2)
-                    goto stt1;
+                    goto hjrg1;
             }
             ma[i] = t2;
             if (level == 1 || level == 3)
@@ -151,6 +159,7 @@ void Random_army()
             enemyarmy[i][6] = to_string(rand_kolvo);
         }
     }
+    return 1;
 }
 
 void LevelUp() //проверка и повышение уровня игрока и его характеристик
@@ -384,6 +393,7 @@ int Veshi()
             return 1;
         }
     }
+    return 1;
 }
 
 int ChooseUnit() //Магазин
@@ -543,11 +553,17 @@ int ChooseUnit() //Магазин
                 return 1;
         }
     }
+    return 1;
 }
 
 int Battle()
 {
-    Random_army(); //рандомно заполняем армию противника
+    if (!mozhnoornet) //Если пользователь участвовал в бою ранее,
+    {							//то повторно участвовать нельзя, пока не сходить в бордель/кафе
+        cout << "\n\nСначала отдохните, сходив в бордель или в кафе";
+        Sleep(2000); //Пауза
+        return 1; //Возврат в меню
+    }
     bool mpt = true;
     system("cls");
     bool check = true; // проверка на наличие хотя бы 1 отряда в армии игрока
@@ -563,13 +579,13 @@ int Battle()
             break;
         }
     }
-    if (check == false)
+    if (!check)
     {
         cout << "\nВаша армия пуста. Для начала пополните её!\n";
         Sleep(3000);
         return 1;
     }
-
+    Random_army();
     int ran = 0;
     ran = Random(1, 20); //рандомное кол-во времени на поиск противника
     int i = 0;
@@ -1278,6 +1294,7 @@ int Battle()
             }
         }
     }
+    return 1;
 }
 
 int slychai()
@@ -1731,6 +1748,7 @@ int Dange() //выбор данжа
             }
         }
     }
+    return 1;
 }
 
 int traktir_pool() //Один из 3 методов на случайное событие на работе
@@ -2026,11 +2044,13 @@ int bordel()
         Sleep(3000);
         return 1; //Возврат в меню
     }
+    return 1;
 }
 
 int menu_army()
 {
-    for (int h = 0; h < 10; h++) //Сканируем весь массив армии
+    for (int h = 0; h < 10; h++)
+    {//Сканируем весь массив армии
         if (army[h][0] != "") //Если нулевая ячейка не равна нулю, то выводим данные об армии
         {
             cout << "\nВаша армия '" << army[h][0] << "':";
@@ -2042,6 +2062,7 @@ int menu_army()
             cout << "\nИтоговая численнсть: " << army[h][6];
             cout << "\n\n";
         }
+    }
     char ch;
     int code;
     cout << "\n\nДля возврата в меню - нажмите Enter"; //Возвращаемся в меню
@@ -2052,6 +2073,7 @@ int menu_army()
         if (ch == 13) // если клавиша Enter
             return 1;
     }
+    return 1;
 }
 
 int cheat(string kod)
@@ -2251,19 +2273,10 @@ void MainMenu()
     cout << "\nВыберите, куда пойти: "; //Выбираем пункт меню
     string vib;
     cin >> vib;
-    if (vib == "1")
-    {
-        if (mozhnoornet == false) //Если пользователь участвовал в бою ранее,
-        {							//то повторно участвовать нельзя, пока не сходить в бордель/кафе
-            cout << "Сначала отдохните, сходив в бордель или в кафе";
-            Sleep(2000); //Пауза
-            MainMenu(); //Возврат в меню
-        }
-        else //Если участвовать в бою можно
-        {
-            Battle(); //Перенос в метод боя (Делал Павел Кононенков)
-            MainMenu(); //После битвы возврат в галвное меню
-        }
+    if (vib == "1") {
+        system("cls");
+        Battle(); //Перенос в метод боя (Делал Павел Кононенков)
+        MainMenu(); //После битвы возврат в галвное меню
     }
     else if (vib == "2")
     {
