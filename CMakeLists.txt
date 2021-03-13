@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 3.17)
+set(PROJECT_NAME "Game")
+project(${PROJECT_NAME})
+set(SFML_DIR "${CMAKE_CURRENT_LIST_DIR}/libs/SFML-2.5.1/lib/cmake/SFML")
+file(GLOB ALL_REQUIRED_DLL "libs/required_dlls/*.dll")
+file(COPY ${ALL_REQUIRED_DLL} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+set(CMAKE_CXX_STANDARD 14)
+link_libraries(stdc++fs) #link the filesystem
+find_package(SFML 2.5.1 COMPONENTS system window graphics network audio REQUIRED)
+add_executable(Game main.cpp)
+target_link_libraries(${PROJECT_NAME} sfml-audio sfml-graphics sfml-window sfml-system)
