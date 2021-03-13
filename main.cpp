@@ -1813,10 +1813,10 @@ int EarnMoney()
             {
                 system("cls");
                 int i = 0;
-                while (i < 15)
+                while (i < 100)
                 {
-                    Sleep(1000);    //задержка в 1000 миллисекунд (1 секунда)
-                    std::cout << "Работаю" << std::endl;
+                    Sleep(800);    //задержка в 1000 миллисекунд (1 секунда)
+                    std::cout << "Работаю ("<<i<<"%)" << std::endl;
                     i++;
                 }
                 int test = 1;
@@ -1826,7 +1826,10 @@ int EarnMoney()
                     system("cls");
                     int rand = 1000 * Random(2, 5);
                     gold += rand;
-                    cout << "Вы заработали " << rand << " золота";
+                    int rand1 = 100 * Random(1,4);
+                    xp += rand1;
+                    cout << "Вы заработали " << rand << " золота\n";
+                    cout << "Вы заработали " << rand1 << " XP\n";
                 }
                 cout << "\n\n";
                 goto start;
@@ -1843,10 +1846,10 @@ int EarnMoney()
             {
                 system("cls");
                 int i = 0;
-                while (i < 5)
+                while (i < 100)
                 {
-                    Sleep(1000);    //задержка в 1000 миллисекунд (1 секунда)
-                    std::cout << "Работаю" << std::endl;
+                    Sleep(600);    //задержка в 1000 миллисекунд (1 секунда)
+                    std::cout << "Работаю ("<<i<<"%)" << std::endl;
                     i++;
                 }
                 int test = 1;
@@ -1856,7 +1859,10 @@ int EarnMoney()
                     system("cls");
                     int rand = 500 * Random(2, 5);
                     gold += rand;
-                    cout << "Вы заработали " << rand << " золота";
+                    int rand1 = 60 * Random(1, 6);
+                    xp += rand1;
+                    cout << "Вы заработали " << rand << " золота\n";
+                    cout << "Вы заработали " << rand1 << " XP\n";
                 }
                 cout << "\n\n";
                 goto start;
@@ -1866,10 +1872,10 @@ int EarnMoney()
         {
             system("cls");
             int i = 0;
-            while (i < 5)
+            while (i < 50)
             {
                 Sleep(1000);    //задержка в 1000 миллисекунд (1 секунда)
-                std::cout << "Работаю" << std::endl;
+                std::cout << "Работаю ("<<i*2<<"%)" << std::endl;
                 i++;
             }
             int test = 1;
@@ -1879,7 +1885,9 @@ int EarnMoney()
                 system("cls");
                 int rand = 100 * Random(1, 3);
                 gold += rand;
-                cout << "Вы заработали " << rand << " золота";
+                int rand1 = 40 * Random(1, 4);
+                cout << "Вы заработали " << rand << " золота\n";
+                cout << "Вы заработали " << rand1 << " XP\n";
             }
             cout << "\n\n";
             goto start;
@@ -1888,6 +1896,8 @@ int EarnMoney()
         {
             return 1;
         }
+        default:
+            goto start;
     }
 }
 
@@ -1956,25 +1966,25 @@ int bordel()
             return 1;
         }
         gold -= 200; //Списывается 200 золота
-        music.pause(); //Фоновая музыка ставиться на паузу
-        if (!music1.openFromFile("gachi.ogg")) //Включается другая музыка
-        {
-
-        }
-        music1.setVolume(50); //Громкость другой музыки
-        music1.setLoop(true); //Повторность другой музыкт
-        music1.play(); //Воспроизвести другую музыку
         cout << "Добро пожаловать в бордель!\n";
         cout << "За вход списано 200 золота\n";
-        stt1: cout << "\nВыберите свою принадлежность: \n1. Гей\n2. Натурал\nВыбор: ";
+        stt1: cout << "\nВыберите свою принадлежность: \n1. Gay-party\n2. Натурал\nВыбор: ";
         cin >> a;
         int g = 0;
         if (a == 1) //Если выбрана "гей" принадлежность
         {
+            music.pause(); //Фоновая музыка ставиться на паузу
+            if (!music1.openFromFile("gachi.ogg")) //Включается другая музыка
+            {
+
+            }
+            music1.setVolume(50); //Громкость другой музыки
+            music1.setLoop(true); //Повторность другой музыкт
+            music1.play(); //Воспроизвести другую музыку
             while (i < 100) //Пока i<100
             {
                 Sleep(500);    //задержка
-                std::cout << "Процесс гей-порнухи (" << i << "%)" << std::endl;
+                std::cout << "Процесс гей-вечеринки (" << i << "%)" << std::endl;
                 i++;
             }
             cout << "Вы завершили...\n";
@@ -1987,6 +1997,9 @@ int bordel()
                 vich = true;
             }
             Sleep(5000);
+            music1.stop(); //Остановка гачи музыки
+            music.play(); //Воспроизведение фоновой музыки
+            return 1;
         }
             //То же самое, как и в "гей"
         else if (a == 2)
@@ -1994,7 +2007,7 @@ int bordel()
             while (i < 100)
             {
                 Sleep(500);    //задержка
-                std::cout << "Процесс порнухи (" << i << "%)" << std::endl;
+                std::cout << "Процесс ... (" << i << "%)" << std::endl;
                 i++;
             }
             cout << "Вы завершили...\n";
@@ -2011,8 +2024,6 @@ int bordel()
         else
             goto stt1;
         Sleep(3000);
-        music1.stop(); //Остановка гачи музыки
-        music.play(); //Воспроизведение фоновой музыки
         return 1; //Возврат в меню
     }
 }
