@@ -1629,6 +1629,8 @@ int DangeEvents()
 
 int Dange() //выбор данжа
 {
+    pjkl:
+    system("cls");
     cout << "1. Бронзовый\n";
     cout << "2. Серебряный\n";
     cout << "3. Золотой\n";
@@ -1747,6 +1749,8 @@ int Dange() //выбор данжа
                 return 1;
             }
         }
+        default:
+            goto pjkl;
     }
     return 1;
 }
