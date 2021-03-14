@@ -9,8 +9,7 @@ sf::Music music;
 sf::Music music1;
 
 using namespace std;
-//КОНОПЕНКОВ ПИСАТЬ РАСЫ! Hello
-//I HATE CLION AND VS
+
 const unsigned int DIM1 = 10; //константы, определяющие размеры массивов
 const unsigned int DIM2 = 7;
 string mas[DIM1][DIM2] = { //массив со всем возможными отрядами ///характеристики: атака, защита, здоровье, регенерация, цена, тип атаки
