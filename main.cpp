@@ -42,6 +42,7 @@ int shet = 0;
 //Характеристики персонажа
 string name = "";
 string klass = "";
+string race = "";
 double health = 100;
 int level = 1;
 int xp = 0;
@@ -1410,6 +1411,7 @@ int menu_igroka()
     cout << "Меню: \n\n"; //Вывод всех характеристик персонажа
     cout << "\nИмя персонажа: " << name;
     cout << "\nКласс персонажа: " << klass;
+    cout << "\nРаса персонажа: " << race;
     cout << "\nУровень: " << level;
     cout << "\nXP: " << xp;
     cout << "\nЗолото: " << gold;
@@ -2363,6 +2365,69 @@ void Mag()
     magsila = 100;
 }
 
+int Races()
+{
+    string races[5] = {
+            "Люди",
+            "Эльфы",
+            "Темные эльфы",
+            "Орки",
+            "Дворфы"
+    };
+    int number = 1;
+    cout << "\n\n\n\n";
+    for (int i = 0; i < 5; i++)
+    {
+        cout << number << ". " << races[i] << "\n";
+        number++;
+    }
+    cout << "\n";
+    cout << "\nВыберите расу персонажа: ";
+    int r = 0;
+    cin >> r;
+    switch(r)
+    {
+        case 1:
+        {
+            race = races[r - 1];
+            break;
+        }
+        case 2:
+        {
+            race = races[r - 1];
+            health -= 30;
+            max_health -= 30;
+            magsila += 100;
+            break;
+        }
+        case 3:
+        {
+            race = races[r - 1];
+            health -= 10;
+            max_health -= 30;
+            magsila += 70;
+            break;
+        }
+        case 4:
+        {
+            race = races[r - 1];
+            health += 50;
+            max_health += 100;
+            magsila -= 50;
+            break;
+        }
+        case 5:
+        {
+            race = races[r - 1];
+            health += 30;
+            max_health += 30;
+            magsila -= 20;
+            break;
+        }
+    }
+    return 1;
+}
+
 int t1()
 {
     st2: cout << "\nВведите имя персонажа: "; //Вводим имя персонажа
@@ -2392,6 +2457,7 @@ int t1()
     }
     else
         goto st1;
+    Races();
     MainMenu(); //Переходим в метод главного меню
     return 1;
 }
