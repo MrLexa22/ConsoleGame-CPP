@@ -1066,7 +1066,7 @@ int Battle()
 
                 int rak = 0;
                 att3:
-                rak = Random(0, j1);
+                rak = Random1(0, 9);
                 if (rak < 0)
                     goto att3;
                 bool tik = true;
@@ -1080,7 +1080,7 @@ int Battle()
                         break;
                     }
                 }
-                cout << rak << "\n";
+                //cout << rak << "\n";
                 if (tik == true)
                     goto att3;
 
@@ -1112,7 +1112,7 @@ int Battle()
                 while (tik1 == true)
                 {
                     rak1 = 0;
-                    rak1 = Random(0, 9);
+                    rak1 = Random1(0, 9);
                     for (int i = 0; i < 10; i++)
                     {
                         if (rak1 == ind[i])
