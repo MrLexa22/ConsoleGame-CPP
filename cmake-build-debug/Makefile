@@ -67,10 +67,10 @@ RM = "C:\Program Files\JetBrains\CLion 2020.3.2\bin\cmake\win\bin\cmake.exe" -E 
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\lesha\CLionProjects\Game
+CMAKE_SOURCE_DIR = C:\Users\pakon\CLionProjects\Game
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\lesha\CLionProjects\Game\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Users\pakon\CLionProjects\Game\cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -99,9 +99,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\lesha\CLionProjects\Game\cmake-build-debug\CMakeFiles C:\Users\lesha\CLionProjects\Game\cmake-build-debug\CMakeFiles\progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\pakon\CLionProjects\Game\cmake-build-debug\CMakeFiles C:\Users\pakon\CLionProjects\Game\cmake-build-debug\CMakeFiles\progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\lesha\CLionProjects\Game\cmake-build-debug\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\pakon\CLionProjects\Game\cmake-build-debug\CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -142,6 +142,33 @@ Game/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Game.dir\build.make CMakeFiles/Game.dir/build
 .PHONY : Game/fast
 
+Race.obj: Race.cpp.obj
+
+.PHONY : Race.obj
+
+# target to build an object file
+Race.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Game.dir\build.make CMakeFiles/Game.dir/Race.cpp.obj
+.PHONY : Race.cpp.obj
+
+Race.i: Race.cpp.i
+
+.PHONY : Race.i
+
+# target to preprocess a source file
+Race.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Game.dir\build.make CMakeFiles/Game.dir/Race.cpp.i
+.PHONY : Race.cpp.i
+
+Race.s: Race.cpp.s
+
+.PHONY : Race.s
+
+# target to generate assembly for a file
+Race.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Game.dir\build.make CMakeFiles/Game.dir/Race.cpp.s
+.PHONY : Race.cpp.s
+
 main.obj: main.cpp.obj
 
 .PHONY : main.obj
@@ -178,6 +205,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... Game
+	@echo ... Race.obj
+	@echo ... Race.i
+	@echo ... Race.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
