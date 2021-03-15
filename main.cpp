@@ -12,7 +12,7 @@ using namespace std;
 
 const unsigned int DIM1 = 10; //константы, определяющие размеры массивов
 const unsigned int DIM2 = 7;
-string mas[DIM1][DIM2] = { //массив со всем возможными отрядами ///характеристики: атака, защита, здоровье, регенерация, цена, тип атаки
+string mas[DIM1][DIM2] ={ //массив со всем возможными отрядами ///характеристики: атака, защита, здоровье, регенерация, цена, тип атаки
         {"Лучник","50","15","140","2","200","range"},
         {"Арбалетчик", "100", "30", "200", "5", "400", "range"},
         {"Лучник с длинным луком", "150", "7", "250", "4", "500", "range"},
@@ -407,7 +407,6 @@ int Veshi()
     return 1;
 }
 
-//Сделать проверки
 int ChooseUnit() //Магазин
 {
     start:
@@ -431,14 +430,11 @@ int ChooseUnit() //Магазин
     system("cls"); //Очищаем консоль
     for (int i = 0; i < 10; i++)//Сканируем массив и находим в нём войска нужного типа
     {
-        if (mas[i][0] != "" && mas[i][6] == tip)
-        {
+        if (mas[i][0] != "" && mas[i][6] == tip) {
             if (level < 7 && mas[i][0] == "Немецкий Африканский Танковый Корпус") //Если уровень меньше 7
-            {																//То корпуса купить нельзя
+            {                                                                //То корпуса купить нельзя
                 continue;
-            }
-            else
-            {
+            } else {
                 cout << j << ". " << mas[i][0] << "\n"; //Выводим найденное совпадение
                 k[hh] = i; //Записываем индекс массива
                 hh++; //прибавляем hh
@@ -448,19 +444,25 @@ int ChooseUnit() //Магазин
         }
     }
 
-
-    st11: cout << "Выбор: ";
-    cin >> j2; //выбираем
+    string vib33 = "";
+    st11:
+    cout << "Выбор: ";
+    cin >> vib33;
+    bool jcheck = intSigned(vib33);
+    if (!jcheck)
+    {
+        cout << "\nНЕ число! \n";
+        goto st11;
+    }
+    j2 = atoi(vib33.c_str());
     bool flag1 = false;
-
     for (int i1 = 0; i1 < j; ++i1) //Проверяем, если пользователь ввёл
-    {							//Число выбора правильное
+    {                            //Число выбора правильное
         if (checker3[i1] == j2 && checker3[i1] != 0) //То программа продолжается
         {
             flag1 = true;
         }
     }
-
     if (!flag1) //Если нет, то предлагаем повторить ввод
     {
         cout << "Error\n";
@@ -481,89 +483,97 @@ int ChooseUnit() //Магазин
         cout << "Цена: " << mas[vob][5] << "\n";
         cout << "Тип атаки: " << mas[vob][6] << "\n";
 
+        kik:
         cout << "\n1. Buy unit \n2. Exit \nYour choose: ";
-        int v; //Предлагаем купить или выйти
+        string v; //Предлагаем купить или выйти
         cin >> v;
         int h = 0;
-        switch (v)
+        if (v == "1")
         {
-            case 1:
+            nach:
+            cout << "Enter kolvo: "; //Вводим количество
+            cin >> vib33;
+            bool jcheck = intSigned(vib33);
+            if (!jcheck)
             {
-                nach:
-                cout << "Enter kolvo: "; //Вводим количество
-                int kolvo;
-                cin >> kolvo;
-                if (gold < (atoi(mas[vob][5].c_str()) * kolvo)) //Если денег не хватает, то предлагаем повторить ввод
-                {
-                    cout << "Мало денег \n";
-                    goto start;
+                cout << "\nНЕ число! \n";
+                goto st11;
+            }
+            int kolvo;
+            kolvo = atoi(vib33.c_str());
+
+            if (gold < (atoi(mas[vob][5].c_str()) * kolvo)) //Если денег не хватает, то предлагаем повторить ввод
+            {
+                cout << "Мало денег \n";
+                goto start;
+            }
+            bool iii = true;
+            for (int i = 0; i < 10; i++) //Находим свободную ячейку
+            {
+                if (army[i][0] == mas[vob][0]) //Если уже есть такой тип войск
+                {                            //То записываем её индекс
+                    h = i;
+                    iii = false;
+                    break;
                 }
-                bool iii = true;
+            }
+            if (iii)
+            {
                 for (int i = 0; i < 10; i++) //Находим свободную ячейку
                 {
-                    if (army[i][0] == mas[vob][0]) //Если уже есть такой тип войск
-                    {							//То записываем её индекс
+                    if (army[i][0] == "") //Если находим пустую, то записываем в пустую
+                    {
                         h = i;
-                        iii = false;
                         break;
                     }
                 }
-                if (iii)
+            }
+            if (kolvo > 10 || kolvo <= 0) //Проверяем, чтобы ввёленное число кол-ва было нормальным
+            {
+                cout << "Максимальное кол-во юнитов в отряде 10\n\n";
+                goto nach;
+            }
+            if ((kolvo + atoi(army[h][6].c_str())) > 10) //Проверяем сколько уже есть юнитов
+            {
+                cout << "В вашей армии находится " << atoi(army[h][6].c_str()) << " юнитов данного типа\n";
+                cout << "Максимальное кол-во юнитов в отряде 10\n\n";
+                ChooseUnit();
+            }
+            else
                 {
-                    for (int i = 0; i < 10; i++) //Находим свободную ячейку
-                    {
-                        if (army[i][0] == "") //Если находим пустую, то записываем в пустую
-                        {
-                            h = i;
-                            break;
-                        }
-                    }
-                }
-                if (kolvo > 10 || kolvo <= 0) //Проверяем, чтобы ввёленное число кол-ва было нормальным
+                arm: //Записываем в армию игрока выбранный юнит
+                army[h][0] = mas[vob][0];
+                army[h][1] = to_string(atoi(mas[vob][1].c_str()) * kolvo + atoi(army[h][1].c_str()));
+                army[h][2] = to_string(atoi(mas[vob][2].c_str()) * kolvo + atoi(army[h][2].c_str()));
+                army[h][3] = to_string(atoi(mas[vob][3].c_str()) * kolvo + atoi(army[h][3].c_str()));
+                army[h][4] = to_string(atoi(mas[vob][4].c_str()) * kolvo + atoi(army[h][4].c_str()));
+                army[h][5] = mas[vob][6];
+                army[h][6] = to_string(kolvo + atoi(army[h][6].c_str()));
+                gold -= (atoi(mas[vob][5].c_str()) * kolvo);
+                system("cls"); //Выводим характеристики армии
+                cout << "\nВаша армия '" << army[h][0] << "':";
+                cout << "\nАтака (итог): " << army[h][1];
+                cout << "\nЗащита (итог): " << army[h][2];
+                cout << "\nЗдоровье (итог): " << army[h][3];
+                cout << "\nРегенерация (итог): " << army[h][4];
+                cout << "\nЦена: " << army[h][5];
+                cout << "\nИтоговая численнсть: " << army[h][6];
+                char ch;
+                int code;
+                cout << "\n\nДля возврата в меню - нажмите Enter"; //предлагаем вернуться в меню
+                while (1)
                 {
-                    cout << "Максимальное кол-во юнитов в отряде 10\n\n";
-                    goto nach;
-                }
-                if ((kolvo + atoi(army[h][6].c_str())) > 10) //Проверяем сколько уже есть юнитов
-                {
-                    cout << "В вашей армии находится " << atoi(army[h][6].c_str()) << " юнитов данного типа\n";
-                    cout << "Максимальное кол-во юнитов в отряде 10\n\n";
-                    ChooseUnit();
-                }
-                else
-                {
-                    arm: //Записываем в армию игрока выбранный юнит
-                    army[h][0] = mas[vob][0];
-                    army[h][1] = to_string(atoi(mas[vob][1].c_str()) * kolvo + atoi(army[h][1].c_str()));
-                    army[h][2] = to_string(atoi(mas[vob][2].c_str()) * kolvo + atoi(army[h][2].c_str()));
-                    army[h][3] = to_string(atoi(mas[vob][3].c_str()) * kolvo + atoi(army[h][3].c_str()));
-                    army[h][4] = to_string(atoi(mas[vob][4].c_str()) * kolvo + atoi(army[h][4].c_str()));
-                    army[h][5] = mas[vob][6];
-                    army[h][6] = to_string(kolvo + atoi(army[h][6].c_str()));
-                    gold -= (atoi(mas[vob][5].c_str()) * kolvo);
-                    system("cls"); //Выводим характеристики армии
-                    cout << "\nВаша армия '" << army[h][0] << "':";
-                    cout << "\nАтака (итог): " << army[h][1];
-                    cout << "\nЗащита (итог): " << army[h][2];
-                    cout << "\nЗдоровье (итог): " << army[h][3];
-                    cout << "\nРегенерация (итог): " << army[h][4];
-                    cout << "\nЦена: " << army[h][5];
-                    cout << "\nИтоговая численнсть: " << army[h][6];
-                    char ch;
-                    int code;
-                    cout << "\n\nДля возврата в меню - нажмите Enter"; //предлагаем вернуться в меню
-                    while (1)
-                    {
-                        ch = _getch();
-                        code = static_cast<int>(ch);
-                        if (ch == 13) // если клавиша Enter
-                            return 1;
-                    }
+                    ch = _getch();
+                    code = static_cast<int>(ch);
+                    if (ch == 13) // если клавиша Enter
+                        return 1;
                 }
             }
-            case 2: //Если выбрали 2, то возрат в гланвое меню
-                return 1;
         }
+        else if (v == "2") //Если выбрали 2, то возрат в гланвое меню
+            return 1;
+        else
+            goto kik;
     }
     return 1;
 }
