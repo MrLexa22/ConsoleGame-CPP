@@ -139,7 +139,7 @@ int Random_army()
         if (t1 == 0)
         {
             hjrg1: t2 = Random1(0, 9);
-            if (mas[t2][0] == "Немецкий Африканский Танковый Корпус" && boss == false)
+            if ((mas[t2][0] == "Немецкий Африканский Танковый Корпус" || mas[t2][0]=="Художник из Австрии") && boss == false)
                 goto hjrg1;
             for (int i = 0; i < arraySize; i++)
             {
@@ -147,7 +147,7 @@ int Random_army()
                     goto hjrg1;
             }
             ma[i] = t2;
-            if (level == 1 || level == 3)
+            if (level == 1 || level == 2 || level == 3)
             {
                 rand_kolvo = Random1(1, 3);
             }
@@ -180,7 +180,7 @@ int Random_army()
 
 int LevelUp() //проверка и повышение уровня игрока и его характеристик
 {
-    if (xp >= 400)
+    if (xp >= 400 && xp < 800)
     {
         level = 2;
         health = health + (level * 4); //увеличение здоровья в зависимости от уровня
@@ -195,7 +195,7 @@ int LevelUp() //проверка и повышение уровня игрока
             magsila = magsila + (level * 4);
         }
     }
-    else if (xp >= 800)
+    else if (xp >= 800 && xp < 1600)
     {
         level = 3;
         health = health + (level * 4);
@@ -210,7 +210,7 @@ int LevelUp() //проверка и повышение уровня игрока
             magsila = magsila + (level * 4);
         }
     }
-    else if (xp >= 1600)
+    else if (xp >= 1600 && xp < 2200)
     {
         level = 4;
         health = health + (level * 4);
@@ -225,7 +225,7 @@ int LevelUp() //проверка и повышение уровня игрока
             magsila = magsila + (level * 4);
         }
     }
-    else if (xp >= 2200)
+    else if (xp >= 2200 && xp < 2600)
     {
         level = 5;
         health = health + (level * 4);
@@ -240,7 +240,7 @@ int LevelUp() //проверка и повышение уровня игрока
             magsila = magsila + (level * 4);
         }
     }
-    else if (xp >= 2600)
+    else if (xp >= 2600 && xp < 3000)
     {
         level = 6;
         health = health + (level * 4);
@@ -255,7 +255,7 @@ int LevelUp() //проверка и повышение уровня игрока
             magsila = magsila + (level * 4);
         }
     }
-    else if (xp >= 3000)
+    else if (xp >= 3000 && xp < 3500)
     {
         level = 7;
         health = health + (level * 4);
@@ -270,7 +270,7 @@ int LevelUp() //проверка и повышение уровня игрока
             magsila = magsila + (level * 4);
         }
     }
-   else  if (xp >= 3500)
+   else  if (xp >= 3500 && xp < 4000)
     {
         level = 8;
         health = health + (level * 4);
@@ -285,7 +285,7 @@ int LevelUp() //проверка и повышение уровня игрока
             magsila = magsila + (level * 4);
         }
     }
-    else if (xp >= 4000)
+    else if (xp >= 4000 && xp < 5000)
     {
         level = 9;
         health = health + (level * 4);
@@ -300,7 +300,7 @@ int LevelUp() //проверка и повышение уровня игрока
             magsila = magsila + (level * 4);
         }
     }
-    else if (xp >= 5000)
+    else if (xp >= 5000 && level < 10)
     {
         level = 10;
         health = health + (level * 4);
@@ -437,7 +437,7 @@ int ChooseUnit() //Магазин
     for (int i = 0; i < 10; i++)//Сканируем массив и находим в нём войска нужного типа
     {
         if (mas[i][0] != "" && mas[i][6] == tip) {
-            if (level < 7 && mas[i][0] == "Немецкий Африканский Танковый Корпус") //Если уровень меньше 7
+            if (level < 7 && (mas[i][0] == "Немецкий Африканский Танковый Корпус" || mas[i][0]=="Художник из Австрии")) //Если уровень меньше 7
             {                                                                //То корпуса купить нельзя
                 continue;
             } else {
@@ -586,7 +586,7 @@ int ChooseUnit() //Магазин
 
 int Battle()
 {
-    cout<<"Pleae Wait";
+    cout<<"Pleae Wait\n";
     if (!mozhnoornet) //Если пользователь участвовал в бою ранее,
     {							//то повторно участвовать нельзя, пока не сходить в бордель/кафе
         cout << "\n\nСначала отдохните, сходив в бордель или в кафе";
@@ -595,6 +595,7 @@ int Battle()
     }
     bool mpt = true;
     system("cls");
+    cout<<"Pleae Wait";
     bool check = false; // проверка на наличие хотя бы 1 отряда в армии игрока
     for (int i = 0; i < 10; i++)
     {
