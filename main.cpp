@@ -84,18 +84,24 @@ bool intSigned(const std::string& s)
 
 int Random1(int a,int b)
 {
-    srand(time(NULL));
+    _sleep(500);
+    srand(_time64(NULL));
+    return a + (rand() % ((b - a) + 1));;
+    /*srand(time(NULL));
     if (a >= 0) return a + rand() % (b - a);
-    else return a + rand() % (abs(a) + b);
+    else return a + rand() % (abs(a) + b);*/
 }
 
 int Random(int min, int max) //Генератор рандомных числе в диапазоне
 {
-    std::random_device random_device;
+    _sleep(500);
+    srand(_time64(NULL));
+    return min + (rand() % ((max - min) + 1));;
+    /*std::random_device random_device;
     std::mt19937 generator(random_device());
     std::uniform_int_distribution<> distribution(min, max);
-    int x = distribution(generator);
-    return x;
+    int x = distribution(generator);*/
+    //return x;
 }
 
 int Random_army()
@@ -1282,7 +1288,7 @@ int Battle()
                 cout << "\nОтряд '" << pname << "' противника нанес " << enataka << " едениц урона вашему отряду '" << apname << "' и получил " << ataka << " единиц урона в ответ";
                 cout << "\nУ вашего отряда '" << apname << "' осталось " << healt << " единиц здоровья.";
                 cout << "\nУ отряда '" << pname << "' противника осталось " << enhealt << " единиц здоровья.";
-                Sleep(10000);
+                Sleep(3000);
 
                 int enxproverka = 0, enxenproverka = 0;//точно такая же проверка как и до этого
                 for (int i = 0; i < 10; i++)
