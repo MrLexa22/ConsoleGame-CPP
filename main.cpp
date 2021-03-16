@@ -7,7 +7,7 @@
 
 sf::Music music;
 sf::Music music1;
-//Hello12
+//Hello1233
 using namespace std;
 
 const unsigned int DIM1 = 10; //константы, определяющие размеры массивов
