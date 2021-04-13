@@ -2851,6 +2851,7 @@ int t1()
 
 int main()
 {
+    system("chcp 65001");
     if (!music.openFromFile("astronomia.ogg")) //Включение фоновой музыки
     { }
     music.setVolume(50); //Установка громкости фоновой музыка
