@@ -4,12 +4,14 @@
 #include <conio.h>
 #include <random>
 #include <SFML/Audio.hpp>
+#include <fstream>
 
 sf::Music music;
 sf::Music music1;
 //Hello1233
 using namespace std;
-
+string path="";
+string dir_path="";
 const unsigned int DIM1 = 10; //константы, определяющие размеры массивов
 const unsigned int DIM2 = 7;
 string mas[DIM1][DIM2] ={ //массив со всем возможными отрядами ///характеристики: атака, защита, здоровье, регенерация, цена, тип атаки
@@ -35,7 +37,7 @@ string spells[DIM1][DIM2] = { //название, урон, магическая
         {"nico nico power", "0", "1000"}, // дает 2 хода подряд
 };
 
-int shet = 0;
+//int shet = 0;
 //Характеристики персонажа
 string name = "";
 string klass = "";
@@ -54,7 +56,7 @@ bool mozhnoornet = true;
 bool vich = false;
 
 //Классовые характеристики
-string rasa = "";
+//string rasa = "";
 double zashita = 0;
 double magsila = 0;
 int max_health = 0;
@@ -82,6 +84,47 @@ bool intSigned(const std::string& s)
     return s.find_first_not_of("0123456789", offset) == std::string::npos;
 }
 
+int Soxranenie()
+{
+    const CHAR *t4 = path.c_str(); //Объявляем char исходя из текущего файла по нику
+    remove(t4); //удаляем файл с прошлым сохранением
+    ofstream ofs(name); //Открываем поток и создаём пустой новый файл
+    ofs.close();  //Закрываем поток
+    std::ofstream out; //Открываем поток записи данных в файл
+    out.open(path);
+    if (out.is_open()) { //Если файл и поток открыт
+        out << klass << std::endl; //Записываем все характеристики
+        out << race << std::endl;
+        out << health << std::endl;
+        out << level << std::endl;
+        out << xp << std::endl;
+        out << gold << std::endl;
+        out << shlem << std::endl;
+        out << grudak << std::endl;
+        out << shtany << std::endl;
+        out << botinki << std::endl;
+        out << magik_or << std::endl;
+        out << mozhnoornet << std::endl;
+        out << vich << std::endl;
+        out << zashita << std::endl;
+        out << magsila << std::endl;
+        out << max_health << std::endl;
+
+        for (int i = 0; i < 10; i++) { //Записываем армию игрока
+            if (army[i][0] != "") {
+                out << army[i][0] << std::endl;
+                out << army[i][1] << std::endl;
+                out << army[i][2] << std::endl;
+                out << army[i][3] << std::endl;
+                out << army[i][4] << std::endl;
+                out << army[i][5] << std::endl;
+                out << army[i][6] << std::endl;
+            }
+        }
+        out << "КОНЕЕЦ!" << std::endl; //Записываем ключевое слово, определяющее конец файла
+    }
+    out.close(); //Закрываем поток
+}
 
 int Random1(int a,int b)
 {
@@ -2472,6 +2515,7 @@ void MainMenu()
 {
     system("cls"); //Очистка
     LevelUp(); //Проверка уровня по количеству XP (Делал Павел Кононенков)
+    Soxranenie();
     magik_or = true;
     if (health <= 20)
         cout << "ВНИМАНИЕ! Ваше здоровье равно или меньше 20 ХП! Для восстановления - покушайте в кафе\n\n";
@@ -2483,6 +2527,8 @@ void MainMenu()
     cout << "6. Бордель\n";
     cout << "7. Меню игрока\n";
     cout << "8. Армия персонажа\n";
+    cout << "9. Таблица лидеров\n";
+    cout << "10. Сохранить игровой процесс";
 
     cout << "\nВыберите, куда пойти: "; //Выбираем пункт меню
     string vib;
@@ -2531,7 +2577,19 @@ void MainMenu()
         menu_army();
         MainMenu();
     }
-    else //если не 1-8
+    else if (vib == "9")
+    {
+
+    }
+    else if (vib == "10") //Ручное сохранение процесса игры
+    {
+        int Soxranenie(); //Переходим в метод сохранения игрового процесса
+        cout << "\n\nДанные обновлены!\n";
+        cout<<"Psss, игрок, в игре встроено автосохранение, при каждом попадании в меню\n";
+        Sleep(7000);
+        MainMenu();
+    }
+    else //если не 1-10
     {
         cheat(vib); //Перенос в метод читов, куда передаём строку ввода выбора
         MainMenu(); //Возврат в меню
@@ -2629,12 +2687,8 @@ int Races()
     return 1;
 }
 
-int t1()
+int t2(string name)
 {
-    st2: cout << "\nВведите имя персонажа: "; //Вводим имя персонажа
-    getline(cin, name);
-    if (name == "") //Если строка пустая, то ошибка
-        goto st2;
     st1: cout << "\n\n\n\n\n"; //Отступ
     cout << "1. Лучник\n";
     cout << "2. Воин\n";
@@ -2659,16 +2713,144 @@ int t1()
     else
         goto st1;
     Races();
+    ofstream ofs(name); //Создаём новый файл
+    ofs.close(); //закрываем поток
     MainMenu(); //Переходим в метод главного меню
+    return 1;
+}
+
+bool checkFile(string file_name) //Метод, проверяющий существование файла
+{
+    ifstream file; //Поток
+    file.open(file_name); //Открываем поток
+    if(!file) { //Если файл не существует, то возвращаем false
+        file.close();
+        return false;
+    }
+    file.close(); //Если файл существует, то возвращаем true
+    return true;
+}
+
+bool ret(string lol) //Метод преобразования строки в bool
+{
+    if (lol == "1") //Если строка = 1, то true
+        return true;
+    else if (lol == "0") //Если строка = 2, то false
+        return false;
+}
+
+int t1()
+{
+    char buffer[MAX_PATH];
+    GetCurrentDirectory(sizeof(buffer),buffer); //Получаем путь текущей дирректории
+    string t = buffer; //Записываем этот путь в string
+    t+="\\Temp"; //Добавляем к string путь до папки
+    dir_path = t; //Путь до ПАПКИ с данными C:/User/..../cmake-build-debug/Temp - там хранятся сохранения игроков
+    const CHAR *t1 = t.c_str(); //Переводим обратно из string в char
+    CreateDirectory(t1,NULL); //Создаем эту папку (ТекущаяДирректория/Temp)
+    st2: cout << "\nВведите имя персонажа: "; //Вводим имя персонажа
+    getline(cin, name);
+    if (name == "") //Если строка пустая, то ошибка
+        goto st2;
+
+    t+="\\"+name+".txt"; //Добавляем к путю файл игрока
+    t1 = t.c_str(); //Переводим эту строку в char
+    bool cher = checkFile(t1); //Проверяем, существует ли файл в этой папке уже
+    path = t1; //Путь до ФАЙЛА С СОХРАНЕНИЕМ с данными КОНКРЕТНОГО ИГРОКА C:/User/..../cmake-build-debug/Temp/login.txt
+    if (!cher) //Если не существует, то игрок выбирает класс и расу, игра с нуля
+        t2(t1);
+    else //Если же существует, то предлагаем игроку начать играть с прошлого сохранения, или начать новую игру
+    {
+        y1: cout << "\nВы уже играли и ваш аккаунт сохранён!";
+        cout << "\nВыберите:";
+        cout << "\n1. Играть с последнего сохранения";
+        cout << "\n2. Начать новую игру (сохранение удаляется)\n";
+        cout << "Выбор: ";
+        string h;
+        cin >> h;
+        if (h == "1") //Если играть с сохранения
+        {
+            string line; //Переменная для считывая
+            int t = 0; //Счётчик
+            std::ifstream in(t1); // окрываем файл для чтения
+            if (in.is_open()) //Если файл открыт
+            {
+                while (getline(in, line)) //Пока поток передаёт строки
+                {
+                    if (t == 0) //В зависимости от счётчика
+                        klass = line; //Записываем в определённую переменную значение из файла
+                    else if (t == 1)
+                        race = line;
+                    else if (t == 2)
+                        health = atof(line.c_str()); //Из строки в double
+                    else if (t == 3)
+                        level = atoi(line.c_str()); //Из строки в int
+                    else if (t == 4)
+                        xp = atoi(line.c_str());
+                    else if (t == 5)
+                        gold = atof(line.c_str());
+                    else if (t == 6)
+                        shlem = ret(line); //Из полученной строки (0 или 1) получаем через ret true or false
+                    else if (t == 7)
+                        grudak = ret(line);
+                    else if (t == 8)
+                        shtany = ret(line);
+                    else if (t == 9)
+                        botinki = ret(line);
+                    else if (t == 10)
+                        magik_or = ret(line);
+                    else if (t == 11)
+                        mozhnoornet = ret(line);
+                    else if (t == 12)
+                        vich = ret(line);
+                    else if (t == 13)
+                        zashita = atof(line.c_str());
+                    else if (t == 14)
+                        magsila = atof(line.c_str());
+                    else if (t == 15)
+                        max_health = atoi(line.c_str());
+                    t++; //Увеличиваем счётчик
+                }
+            }
+            in.close(); //Выходим из потока
+            t=0; //ПОбнуляем счётчик
+            int i = 0; int j2 = 0; //Добавляем переменные для записи армии
+            std::ifstream in2(t1); //Открываем поток
+            if (in2.is_open()) //Если файл открыт
+            {
+                while (getline(in2, line)) //Пока файл передает строки
+                {
+                    if (t > 15 && line != "КОНЕЕЦ!") //Если счётчик больше 15 и файл не достиг конца, то
+                    {
+                        army[i][j2] = line; //Записывамем армию
+                        j2++; //Увеличиваем счётчик армии
+                        if (j2 > 6) { //Если армия закончилась, то обнуляем счётчик и увеличиваем другой счётчик
+                            j2 = 0;
+                            i++;
+                        }
+                    }
+                    t++; //увеличиваем t
+                }
+            }
+            in2.close(); //Закрыааем поток
+            MainMenu(); //Переходим в главное меню
+        }
+        if (h == "2") //Если начать новую игру
+        {
+            remove(t1); //Удаляем файл из папки
+            t2(t1); //Переходим в метод выбора класса и расы, после выбора создасться новый файл
+        }
+        else //Если выбор неверный, то ошибка
+        {
+            cout << "Error\n\n";
+            goto y1;
+        }
+    }
     return 1;
 }
 
 int main()
 {
-    /*SetConsoleCP(1251);//Языковые параметры вывода в консоль
-    SetConsoleOutputCP(1251);
-    setlocale(LC_ALL, "Russian");*/
-    system("chcp 65001");
     if (!music.openFromFile("astronomia.ogg")) //Включение фоновой музыки
     { }
     music.setVolume(50); //Установка громкости фоновой музыка
