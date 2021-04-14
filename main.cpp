@@ -4,12 +4,14 @@
 #include <conio.h>
 #include <random>
 #include <SFML/Audio.hpp>
+#include <fstream>
 
 sf::Music music;
 sf::Music music1;
 //Hello1233
 using namespace std;
-
+string path="";
+string dir_path="";
 const unsigned int DIM1 = 10; //константы, определяющие размеры массивов
 const unsigned int DIM2 = 7;
 string mas[DIM1][DIM2] ={ //массив со всем возможными отрядами ///характеристики: атака, защита, здоровье, регенерация, цена, тип атаки
@@ -35,7 +37,7 @@ string spells[DIM1][DIM2] = { //название, урон, магическая
         {"nico nico power", "0", "1000"}, // дает 2 хода подряд
 };
 
-int shet = 0;
+//int shet = 0;
 //Характеристики персонажа
 string name = "";
 string klass = "";
@@ -48,12 +50,13 @@ bool shlem = false;
 bool grudak = false;
 bool shtany = false;
 bool botinki = false;
+bool magik_or = true;
 
 bool mozhnoornet = true;
 bool vich = false;
 
 //Классовые характеристики
-string rasa = "";
+//string rasa = "";
 double zashita = 0;
 double magsila = 0;
 int max_health = 0;
@@ -81,6 +84,47 @@ bool intSigned(const std::string& s)
     return s.find_first_not_of("0123456789", offset) == std::string::npos;
 }
 
+int Soxranenie()
+{
+    const CHAR *t4 = path.c_str(); //Объявляем char исходя из текущего файла по нику
+    remove(t4); //удаляем файл с прошлым сохранением
+    ofstream ofs(path); //Открываем поток и создаём пустой новый файл
+    ofs.close();  //Закрываем поток
+    std::ofstream out; //Открываем поток записи данных в файл
+    out.open(path);
+    if (out.is_open()) { //Если файл и поток открыт
+        out << klass << std::endl; //Записываем все характеристики
+        out << race << std::endl;
+        out << health << std::endl;
+        out << level << std::endl;
+        out << xp << std::endl;
+        out << gold << std::endl;
+        out << shlem << std::endl;
+        out << grudak << std::endl;
+        out << shtany << std::endl;
+        out << botinki << std::endl;
+        out << magik_or << std::endl;
+        out << mozhnoornet << std::endl;
+        out << vich << std::endl;
+        out << zashita << std::endl;
+        out << magsila << std::endl;
+        out << max_health << std::endl;
+
+        for (int i = 0; i < 10; i++) { //Записываем армию игрока
+            if (army[i][0] != "") {
+                out << army[i][0] << std::endl;
+                out << army[i][1] << std::endl;
+                out << army[i][2] << std::endl;
+                out << army[i][3] << std::endl;
+                out << army[i][4] << std::endl;
+                out << army[i][5] << std::endl;
+                out << army[i][6] << std::endl;
+            }
+        }
+        out << "КОНЕЕЦ!" << std::endl; //Записываем ключевое слово, определяющее конец файла
+    }
+    out.close(); //Закрываем поток
+}
 
 int Random1(int a,int b)
 {
@@ -108,13 +152,12 @@ int Random_army()
 {
     int t = 0;
     bool boss = false;
-    if (level == 1 || level == 3)
+    if (level == 1 || level == 2 || level == 3)
     {
         t = Random1(1,3);
     }
     else if (level == 4 || level == 5)
     {
-
         t = Random1(1,5);
     }
     else if (level == 6 || level == 7)
@@ -139,7 +182,7 @@ int Random_army()
         if (t1 == 0)
         {
             hjrg1: t2 = Random1(0, 9);
-            if (mas[t2][0] == "Немецкий Африканский Танковый Корпус" && boss == false)
+            if ((mas[t2][0] == "Немецкий Африканский Танковый Корпус" || mas[t2][0]=="Художник из Австрии") && boss == false)
                 goto hjrg1;
             for (int i = 0; i < arraySize; i++)
             {
@@ -147,7 +190,7 @@ int Random_army()
                     goto hjrg1;
             }
             ma[i] = t2;
-            if (level == 1 || level == 3)
+            if (level == 1 || level == 2 || level == 3)
             {
                 rand_kolvo = Random1(1, 3);
             }
@@ -180,7 +223,7 @@ int Random_army()
 
 int LevelUp() //проверка и повышение уровня игрока и его характеристик
 {
-    if (xp >= 400)
+    if (xp >= 400 && xp < 800)
     {
         level = 2;
         health = health + (level * 4); //увеличение здоровья в зависимости от уровня
@@ -195,7 +238,7 @@ int LevelUp() //проверка и повышение уровня игрока
             magsila = magsila + (level * 4);
         }
     }
-    else if (xp >= 800)
+    else if (xp >= 800 && xp < 1600)
     {
         level = 3;
         health = health + (level * 4);
@@ -210,7 +253,7 @@ int LevelUp() //проверка и повышение уровня игрока
             magsila = magsila + (level * 4);
         }
     }
-    else if (xp >= 1600)
+    else if (xp >= 1600 && xp < 2200)
     {
         level = 4;
         health = health + (level * 4);
@@ -225,7 +268,7 @@ int LevelUp() //проверка и повышение уровня игрока
             magsila = magsila + (level * 4);
         }
     }
-    else if (xp >= 2200)
+    else if (xp >= 2200 && xp < 2600)
     {
         level = 5;
         health = health + (level * 4);
@@ -240,7 +283,7 @@ int LevelUp() //проверка и повышение уровня игрока
             magsila = magsila + (level * 4);
         }
     }
-    else if (xp >= 2600)
+    else if (xp >= 2600 && xp < 3000)
     {
         level = 6;
         health = health + (level * 4);
@@ -255,7 +298,7 @@ int LevelUp() //проверка и повышение уровня игрока
             magsila = magsila + (level * 4);
         }
     }
-    else if (xp >= 3000)
+    else if (xp >= 3000 && xp < 3500)
     {
         level = 7;
         health = health + (level * 4);
@@ -270,7 +313,7 @@ int LevelUp() //проверка и повышение уровня игрока
             magsila = magsila + (level * 4);
         }
     }
-   else  if (xp >= 3500)
+   else  if (xp >= 3500 && xp < 4000)
     {
         level = 8;
         health = health + (level * 4);
@@ -285,7 +328,7 @@ int LevelUp() //проверка и повышение уровня игрока
             magsila = magsila + (level * 4);
         }
     }
-    else if (xp >= 4000)
+    else if (xp >= 4000 && xp < 5000)
     {
         level = 9;
         health = health + (level * 4);
@@ -300,7 +343,7 @@ int LevelUp() //проверка и повышение уровня игрока
             magsila = magsila + (level * 4);
         }
     }
-    else if (xp >= 5000)
+    else if (xp >= 5000 && level < 10)
     {
         level = 10;
         health = health + (level * 4);
@@ -325,7 +368,7 @@ int Veshi()
     a = Random(0, 25); //Получем число от 0 до 25
     if (a == 7) //Если выпало 7
     {
-        if (shlem != true) //Проверяем, есть ли шлем у персонажа, елси нету
+        if (!shlem) //Проверяем, есть ли шлем у персонажа, елси нету
         {
             cout << "\nПоздравляем! Вам выпал шлем!\n";
             ran = Random(5, 30); //Прибавляем случайное значение защиты
@@ -333,14 +376,14 @@ int Veshi()
             ran = Random(5, 30); //Прибавляем случайное значение здоровья
             cout << "Здоровье +" << ran << "\n"; health += ran;
             shlem = true; //Ставим true, значит шлем у игрока есть
-            Sleep(5000);
+            Sleep(3000);
             return 1;
         }
         else
         {	//Шлем уже есть, поэтому за него дадаут 20 монет
             cout << "\nПоздравляем! Вам выпал шлем, но он у вас уже есть, поэтому вы его продали и получили 20 золота\n";
             gold += 20;
-            Sleep(5000);
+            Sleep(3000);
             return 1;
         }
     }
@@ -355,14 +398,14 @@ int Veshi()
             ran = Random(5, 30);
             cout << "Маг. сила +" << ran << "\n"; magsila += ran;
             grudak = true;
-            Sleep(5000);
+            Sleep(3000);
             return 1;
         }
         else
         {
             cout << "\nПоздравляем! Вам выпал грудак, но он у вас уже есть, поэтому вы его продали и получили 50 золота\n";
             gold += 50;
-            Sleep(5000);
+            Sleep(2000);
             return 1;
         }
     }
@@ -377,7 +420,7 @@ int Veshi()
             ran = Random(5, 30);
             cout << "Маг. сила +" << ran << "\n"; magsila += ran;
             shtany = true;
-            Sleep(5000);
+            Sleep(3000);
             return 1;
         }
         else
@@ -399,14 +442,14 @@ int Veshi()
             ran = Random(5, 30);
             cout << "Маг. сила +" << ran << "\n"; magsila += ran;
             botinki = true;
-            Sleep(5000);
+            Sleep(3000);
             return 1;
         }
         else
         {
             cout << "\nПоздравляем! Вам выпали ботинки, но они у вас уже есть, поэтому вы его продали и получили 25 золота\n";
             gold += 25;
-            Sleep(5000);
+            Sleep(3000);
             return 1;
         }
     }
@@ -437,7 +480,7 @@ int ChooseUnit() //Магазин
     for (int i = 0; i < 10; i++)//Сканируем массив и находим в нём войска нужного типа
     {
         if (mas[i][0] != "" && mas[i][6] == tip) {
-            if (level < 7 && mas[i][0] == "Немецкий Африканский Танковый Корпус") //Если уровень меньше 7
+            if (level < 7 && (mas[i][0] == "Немецкий Африканский Танковый Корпус" || mas[i][0]=="Художник из Австрии")) //Если уровень меньше 7
             {                                                                //То корпуса купить нельзя
                 continue;
             } else {
@@ -562,7 +605,7 @@ int ChooseUnit() //Магазин
                 cout << "\nЗащита (итог): " << army[h][2];
                 cout << "\nЗдоровье (итог): " << army[h][3];
                 cout << "\nРегенерация (итог): " << army[h][4];
-                cout << "\nЦена: " << army[h][5];
+                cout << "\nТипа атаки: " << army[h][5];
                 cout << "\nИтоговая численнсть: " << army[h][6];
                 char ch;
                 int code;
@@ -586,7 +629,7 @@ int ChooseUnit() //Магазин
 
 int Battle()
 {
-    cout<<"Pleae Wait";
+    cout<<"Pleae Wait\n";
     if (!mozhnoornet) //Если пользователь участвовал в бою ранее,
     {							//то повторно участвовать нельзя, пока не сходить в бордель/кафе
         cout << "\n\nСначала отдохните, сходив в бордель или в кафе";
@@ -595,6 +638,7 @@ int Battle()
     }
     bool mpt = true;
     system("cls");
+    cout<<"Please Wait\n";
     bool check = false; // проверка на наличие хотя бы 1 отряда в армии игрока
     for (int i = 0; i < 10; i++)
     {
@@ -612,7 +656,7 @@ int Battle()
     }
     Random_army();
     int ran = 0;
-    ran = Random(1, 20); //рандомное кол-во времени на поиск противника
+    ran = Random(1, 10); //рандомное кол-во времени на поиск противника
     int i = 0;
     cout << "Идет поиск противника";
     while (i < ran)
@@ -659,9 +703,14 @@ int Battle()
         cout << "1. Использовать заклинание \n2. Провести атаку армией\nВыбор: "; //предоставление выбора для атаки : войсками или заклинаниями
         cin >> vib;
         int j = 1;
-        if (vib == "1")
-        { //Доделать проверки
-            jik:
+        if (vib == "1" && magik_or == false)
+        {
+            cout << "\nВы уже воспользовались магией, проведите атаку армией, чтобы снова юзать магию!";
+            Sleep(4000);
+            goto start;
+        }
+        if (vib == "1" && magik_or == true)
+        {
             for (int i = 0; i < 4; i++)
             {
                 if (spells[i][0] != "")
@@ -674,17 +723,19 @@ int Battle()
             int zak = 0;
             cout << "\nВыберите заклинание: ";
             cin >> zak1;
-            if (zak1 == "1") {
+            if (zak1 == "1")
+            {
                 zak = 1;
-                if (magsila < atoi(spells[zak -
-                                          1][2].c_str())) //проверяет, достаточно ли магической силы у персонажа для использования этого заклинания
+                if (magsila < atoi(spells[zak -1][2].c_str())) //проверяет, достаточно ли магической силы у персонажа для использования этого заклинания
                 {
                     cout << "\nУ вас маленькая магическая сила!";
                     Sleep(2000);
                     goto start;
-                } else {
-                    cout << "\nВыбрано заклинание '" << spells[zak - 1][0] << "'"; //выводит выбранное заклинание
-                    Sleep(1000);
+                }
+                else {
+                    magik_or = false;
+                    cout << "\nВыбрано заклинание '" << spells[zak - 1][0] << "'\n"; //выводит выбранное заклинание
+                    Sleep(2000);
                     int enu;
                     int j11 = 1;
                     string jkle1[16];
@@ -713,21 +764,78 @@ int Battle()
                         goto jjj11;
                     }
                     for (int i = 0; i < 10; i++) {
-                        if ((jkle1[enu] == enemyarmy[i][0]) && jkle1[enu] != "") {
+                        if ((jkle1[enu] == enemyarmy[i][0]) && jkle1[enu] != "")
+                        {
                             enu = i;
                             juk1 = true;
-                            break;
+                            //break;
                         }
                     }
-                    if (!juk1) {
+                    if (!juk1)
+                    {
                         cout << "\nНекорректный выбор!\n";
                         goto jjj11;
                     }
                     enu++;
-                    enemyarmy[enu - 1][3] = to_string(
-                            atoi(enemyarmy[enu - 1][3].c_str()) - atoi(spells[zak - 1][1].c_str()));
+                    cout << "Было: " << enemyarmy[enu - 1][0] << " - Здоровье: " << enemyarmy[enu - 1][3];
+                    enemyarmy[enu - 1][3] = to_string(atoi(enemyarmy[enu - 1][3].c_str()) - atoi(spells[zak - 1][1].c_str()));
+                    cout << "\nСтало: " << enemyarmy[enu - 1][0] << " - Здоровье: " << enemyarmy[enu - 1][3];
+                    if (atoi(enemyarmy[enu - 1][3].c_str()) <= 0)
+                    {
+                        for (int i = 0; i<7;i++)
+                        {
+                            enemyarmy[enu - 1][i] = "";
+                        }
+                    }
+                    int enproverka = 0;
+                    for (int i = 0; i < 10; i++)
+                    {
+                        if (enemyarmy[i][0] != "")
+                        {
+                            enproverka++;
+                        }
+                    }
+                    if (enproverka <= 0) //если в армии противника нет отрядов то игрок выигрывает
+                    {
+                        mpt = false;
+                        Sleep(3000);
+                        system("cls");
+                        cout << "Вы победили";
+                        int zarab = 200 * Random(1, 5);
+                        int XP = 100 * Random(1, 5);
+                        //int MG = 150 * Random(1, 5);
+                        cout << "\nВы заработали: " << zarab << " золота" << "\nВы заработали: " << XP<< " опыта\n";//Вы заработали: " << MG << " маг. силы";
+                        //magsila += MG;
+                        Veshi();
+                        xp += XP;
+                        gold += zarab;
+                        for (int i = 0; i < 10; i++)
+                        {
+                            enemyarmy[i][0] = "";
+                            enemyarmy[i][1] = "";
+                            enemyarmy[i][2] = "";
+                            enemyarmy[i][3] = "";
+                            enemyarmy[i][4] = "";
+                            enemyarmy[i][5] = "";
+                            enemyarmy[i][6] = "";
+                        }
+                        Sleep(2000);
+                        mozhnoornet = false;
+                        char ch;
+                        int code;
+                        cout << "\n\nДля возврата в меню - нажмите Enter";
+                        while (1)
+                        {
+                            ch = _getch();
+                            code = static_cast<int>(ch);
+                            if (ch == 13) // если клавиша Enter
+                                return 1;
+                        }
+                    }
+                    Sleep(7000);
+                    goto start;
                 }
-                break;
+                //break;
             }
             else if (zak1 == "2")
             {
@@ -736,11 +844,15 @@ int Battle()
                     cout << "\nУ вас маленькая магическая сила!";
                     Sleep(2000);
                     goto start;
-                } else {
+                }
+                else
+                    {
+                    magik_or = false;
                     cout << "\nВыбрано заклинание '" << spells[zak - 1][0] << "'";
                     Sleep(1000);
                     for (int i = 1; i < 10; i++)
                     {
+                        army[i][0] = "";
                         army[i][1] = "";
                         army[i][2] = "";
                         army[i][3] = "";
@@ -760,24 +872,16 @@ int Battle()
                     }
                     Sleep(3000);
                     system("cls");
-                    cout << "Вы победили";
+                    cout << "Вы победили, НО лишились всей/части своей армии :(";
                     int zarab = 200 * Random(1, 5);
                     int XP = 100 * Random(1, 5);
-                    cout << "\nВы заработали: " << zarab << " золота" << "\nВы заработали: " << XP << " опыта";
+                    //int MG = 150 * Random(1,5);
+                    cout << "\nВы заработали: " << zarab << " золота" << "\nВы заработали: " << XP << " опыта\n";//Вы заработали: "<<MG<<" маг. силы";
                     Veshi();
                     xp += XP;
                     gold += zarab;
-                    for (int i = 0; i < 10; i++)
-                    {
-                        enemyarmy[i][0] = "";
-                        enemyarmy[i][1] = "";
-                        enemyarmy[i][2] = "";
-                        enemyarmy[i][3] = "";
-                        enemyarmy[i][4] = "";
-                        enemyarmy[i][5] = "";
-                        enemyarmy[i][6] = "";
-                    }
-                    Sleep(2000);
+                    //magsila += MG;
+                    //Sleep(1000);
                     mozhnoornet = false;
                     char ch;
                     int code;
@@ -790,7 +894,7 @@ int Battle()
                             return 1;
                     }
                 }
-                break;
+                //break;
             }
             else if (zak1 == "3")
             {
@@ -801,17 +905,16 @@ int Battle()
                     Sleep(2000);
                     goto start;
                 }
-                else
-                    {
-                    cout << "\nВыбрано заклинание '" << spells[zak - 1][0] << "'";
+                else {
+                    magik_or = false;
+                    cout << "\nВыбрано заклинание '" << spells[zak - 1][0] << "'\n";
                     Sleep(1000);
                     int u;
                     int j = 1;
                     string jkle[16];
                     for (int i = 0; i < 10; i++) //вывели отряды противника для атак
                     {
-                        if (army[i][0] != "")
-                        {
+                        if (army[i][0] != "") {
                             cout << j << ". " << army[i][0] << "\n";
                             jkle[j] = army[i][0];
                             j++;
@@ -822,62 +925,69 @@ int Battle()
                     cout << "\nВыберите отряд, для применения к нему сусаноо: "; //выбираем отряд для атаки
                     cin >> vib33;
                     bool jcheck = intSigned(vib33);
-                    if (!jcheck)
-                    {
+                    if (!jcheck) {
                         cout << "\nНЕ число! \n";
                         goto jjj2;
                     }
                     bool juk = false;
                     u = atoi(vib33.c_str());
-                    if (u < 0 || u > 10)
-                    {
+                    if (u < 0 || u > 10) {
                         cout << "\nНекорректный выбор!\n";
                         goto jjj2;
                     }
-                    for (int i = 0; i < 10; i++)
-                    {
-                        if ((jkle[u] == army[i][0]) && jkle[u] != "")
-                        {
+                    for (int i = 0; i < 10; i++) {
+                        if ((jkle[u] == army[i][0]) && jkle[u] != "") {
                             u = i;
                             juk = true;
                             break;
                         }
                     }
-                    if (!juk)
-                    {
+                    if (!juk) {
                         cout << "\nНекорректный выбор!\n";
                         goto jjj2;
                     }
                     u++;
-
+                    cout << "\nБыло: ";
+                    cout << army[u - 1][0] << ":";
+                    cout << "\nАтака: " << army[u - 1][1];
+                    cout << "\nЗащита: " << army[u - 1][2];
+                    cout << "\nЗдоровье: " << army[u - 1][3];
+                    cout << "\nРегенерация: " << army[u - 1][4];
                     army[u - 1][1] = to_string(atoi(army[u - 1][1].c_str()) * 10);
                     army[u - 1][2] = to_string(atoi(army[u - 1][2].c_str()) * 10);
                     army[u - 1][3] = to_string(atoi(army[u - 1][3].c_str()) * 10);
                     army[u - 1][4] = to_string(atoi(army[u - 1][4].c_str()) * 10);
-                    Sleep(1000);
+                    cout << "\nСтало: ";
+                    cout << army[u - 1][0] << ":";
+                    cout << "\nАтака: " << army[u - 1][1];
+                    cout << "\nЗащита: " << army[u - 1][2];
+                    cout << "\nЗдоровье: " << army[u - 1][3];
+                    cout << "\nРегенерация: " << army[u - 1][4];
+                    Sleep(6000);
                     system("cls");
+                    goto start;
                 }
-                break;
             }
             else if (zak1 == "4")
             {
                 zak = 4;
-                if (magsila < atoi(spells[zak - 1][2].c_str()))
+                if (magsila < atoi(spells[zak - 1][2].c_str()) && niconico != true)
                 {
-                    cout << "\nУ вас маленькая магическая сила!";
+                    cout << "\nУ вас маленькая магическая сила! (Заклинанение уже активировано)";
                     Sleep(2000);
                     goto start;
                 }
                 else
                     {
-                    cout << "\nВыбрано заклинание '" << spells[zak - 1][0] << "'";
-                    Sleep(1000);
+                    magik_or = false;
+                    cout << "\nВыбрано заклинание '" << spells[zak - 1][0] << "' оно применятся во время боя";
+                    Sleep(2000);
                     niconico = true;
                     system("cls");
                 }
             }
             else
-                goto jik;
+                goto start;
         }
 
         j = 1;
@@ -1042,6 +1152,7 @@ int Battle()
         //////////////////////////////////// бой
 
         system("cls");
+        magik_or = true;
         cout << "\nВаш отряд '" << apname << "' нанес " << ataka << " едениц урона отряду '" << pname << "' противника и получил " << enataka << " единиц урона в ответ";
         cout << "\nУ вашего отряда '" << apname << "' осталось " << healt << " единиц здоровья.";
         cout << "\nУ отряда '" << pname << "' противника осталось " << enhealt << " единиц здоровья.";
@@ -1052,6 +1163,8 @@ int Battle()
         if (niconico) //проверка на использование заклинания nico nico power
         {
             niconico = false;
+            cout << "\nУ вас актвивировано заклинание, поэтому урона от противника не будет!\n";
+            Sleep(3000);
             goto start;
         }
         int proverka = 0, enproverka = 0; //проверка наличия армий у игроков
@@ -1071,6 +1184,7 @@ int Battle()
             int zarab = 20 * Random(1, 5);
             int XP = 10 * Random(1, 5);
             int damage = 0;
+            //int MG = 5 * Random(1,5);
             for (int i = 0; i < 10; i++) //очистка армии противника
             {
                 enemyarmy[i][0] = "";
@@ -1091,7 +1205,13 @@ int Battle()
             }
 
             health -= damage * 10;
-            cout << "\nВы заработали: " << zarab << " золота" << "\nВы заработали: " << XP << " опыта";
+            if (health <= 0)
+            {
+                cout << "\n\n Ваше здоровье закончилось... Игра завершена\n\n";
+                exit(0);
+            }
+            cout << "\nВы заработали: " << zarab << " золота" << "\nВы заработали: " << XP << " опыта";//\nВы заработали: "<<MG<<" маг. силы";
+            //magsila += MG;
             Veshi();
             xp += XP;
             gold += zarab;
@@ -1125,7 +1245,9 @@ int Battle()
                 cout << "Вы победили";
                 int zarab = 200 * Random(1, 5);
                 int XP = 100 * Random(1, 5);
-                cout << "\nВы заработали: " << zarab << " золота" << "\nВы заработали: " << XP << " опыта";
+                int MG = 150 * Random(1,5);
+                cout << "\nВы заработали: " << zarab << " золота" << "\nВы заработали: " << XP << " опыта\n";//Вы заработали: "<<MG<<" маг. силы";
+                //magsila += MG;
                 Veshi();
                 xp += XP;
                 gold += zarab;
@@ -1327,7 +1449,14 @@ int Battle()
                     }
 
                     health -= damage * 10;
-                    cout << "\nВы заработали: " << zarab << " золота" << "\nВы заработали: " << XP << " опыта";
+                    if (health <= 0)
+                    {
+                        cout << "\n\n Ваше здоровье закончилось... Игра завершена\n\n";
+                        exit(0);
+                    }
+                    int MG = 5 * Random(1,5);
+                    cout << "\nВы заработали: " << zarab << " золота" << "\nВы заработали: " << XP << " опыта\n";//Вы заработали: "<<MG<<" маг. силы";
+                    //magsila += MG;
                     Veshi();
                     xp += XP;
                     gold += zarab;
@@ -1361,7 +1490,9 @@ int Battle()
                         cout << "Вы победили";
                         int zarab = 200 * Random(1, 5);
                         int XP = 100 * Random(1, 5);
-                        cout << "\nВы заработали: " << zarab << " золота" << "\nВы заработали: " << XP << " опыта";
+                        int MG = 5 * Random(1,5);
+                        cout << "\nВы заработали: " << zarab << " золота" << "\nВы заработали: " << XP << " опыта\n";//Вы заработали: "<<MG<<" маг. силы";
+                        //magsila += MG;
                         Veshi();
                         xp += XP;
                         gold += zarab;
@@ -2029,14 +2160,27 @@ int kafe()
     music1.setVolume(50);//Звук хаванья еды
     music1.setLoop(true);
     music1.play(); //Воспроизведение звука хаванья еды
-    while (i < 100) //Пока не будет 100%
+    while (i < 50) //Пока не будет 100%
     {
-        std::cout << "Кушаю (" << i << "%)" << std::endl;
+        std::cout << "Кушаю (" << i*2 << "%)" << std::endl;
         Sleep(400);
         i++;
     }
+    int rand_helath = Random(10,20);
+    if (health+rand_helath >= max_health)
+    {
+        while (health+rand_helath >= max_health)
+        {
+            rand_helath--;
+        }
+    }
     cout << "\nВы успешно поели\n";
-    Sleep(2000);
+    if (rand_helath != 0)
+    {
+        cout << "\nВам прибавлено " << rand_helath << " ХП";
+        health += rand_helath;
+    }
+    Sleep(3000);
     music1.stop(); //Остановка звука хаванья
     music.play(); //Воспроизведение фоновой
     return 1; //Возврат в меню
@@ -2077,10 +2221,10 @@ int bordel()
             music1.setVolume(50); //Громкость другой музыки
             music1.setLoop(true); //Повторность другой музыкт
             music1.play(); //Воспроизвести другую музыку
-            while (i < 100) //Пока i<100
+            while (i < 50) //Пока i<100
             {
                 Sleep(500);    //задержка
-                std::cout << "Процесс гей-вечеринки (" << i << "%)" << std::endl;
+                std::cout << "Процесс гей-вечеринки (" << i*2 << "%)" << std::endl;
                 i++;
             }
             cout << "Вы завершили...\n";
@@ -2093,6 +2237,20 @@ int bordel()
                 vich = true;
             }
             Sleep(5000);
+            cout << "\n\nДля возврата в меню - нажмите Enter"; //Возвращаемся в меню
+            char ch;
+            int code;
+            while (1)
+            {
+                ch = _getch();
+                code = static_cast<int>(ch);
+                if (ch == 13)
+                {// если клавиша Enter
+                    music1.stop(); //Остановка гачи музыки
+                    music.play();
+                    return 1;
+                }
+            }
             music1.stop(); //Остановка гачи музыки
             music.play(); //Воспроизведение фоновой музыки
             return 1;
@@ -2100,10 +2258,10 @@ int bordel()
             //То же самое, как и в "гей"
         else if (a == "2")
         {
-            while (i < 100)
+            while (i < 50)
             {
                 Sleep(500);    //задержка
-                std::cout << "Процесс ... (" << i << "%)" << std::endl;
+                std::cout << "Процесс ... (" << i*2 << "%)" << std::endl;
                 i++;
             }
             cout << "Вы завершили...\n";
@@ -2120,6 +2278,16 @@ int bordel()
         else
             goto stt1;
         Sleep(3000);
+        cout << "\n\nДля возврата в меню - нажмите Enter"; //Возвращаемся в меню
+        char ch;
+        int code;
+        while (1)
+        {
+            ch = _getch();
+            code = static_cast<int>(ch);
+            if (ch == 13) // если клавиша Enter
+                return 1;
+        }
         return 1; //Возврат в меню
     }
     return 1;
@@ -2176,6 +2344,13 @@ int cheat(string kod)
         cout << "\n>>> ВИЧ излечён";
         vich = false;
         Sleep(3000);
+    }
+    else if (kod == "+Mag_Sila+") //Чит-код на + к маг. силе
+    {
+        cout << "\n\nЧит-код активирован";
+        cout << "\n>>> Прибавлено 200 маг. силы";
+        magsila += 200;
+        Sleep(1500);
     }
     else if (kod == "Kopss_mpt666" || kod == "Land_aezakmi" || kod == "ricar_cheat")
     { //Чит-коды на получение в армию по N бойцов определённого типа (до 10 максимум)
@@ -2340,6 +2515,10 @@ void MainMenu()
 {
     system("cls"); //Очистка
     LevelUp(); //Проверка уровня по количеству XP (Делал Павел Кононенков)
+    Soxranenie();
+    magik_or = true;
+    if (health <= 20)
+        cout << "ВНИМАНИЕ! Ваше здоровье равно или меньше 20 ХП! Для восстановления - покушайте в кафе\n\n";
     cout << "1. Бой\n";
     cout << "2. Данж\n";
     cout << "З. Заработать деньги\n";
@@ -2348,6 +2527,8 @@ void MainMenu()
     cout << "6. Бордель\n";
     cout << "7. Меню игрока\n";
     cout << "8. Армия персонажа\n";
+    cout << "9. Таблица лидеров\n";
+    cout << "10. Сохранить игровой процесс";
 
     cout << "\nВыберите, куда пойти: "; //Выбираем пункт меню
     string vib;
@@ -2396,7 +2577,19 @@ void MainMenu()
         menu_army();
         MainMenu();
     }
-    else //если не 1-8
+    else if (vib == "9")
+    {
+
+    }
+    else if (vib == "10") //Ручное сохранение процесса игры
+    {
+        int Soxranenie(); //Переходим в метод сохранения игрового процесса
+        cout << "\n\nДанные обновлены!\n";
+        cout<<"Psss, игрок, в игре встроено автосохранение, при каждом попадании в меню\n";
+        Sleep(7000);
+        MainMenu();
+    }
+    else //если не 1-10
     {
         cheat(vib); //Перенос в метод читов, куда передаём строку ввода выбора
         MainMenu(); //Возврат в меню
@@ -2494,12 +2687,8 @@ int Races()
     return 1;
 }
 
-int t1()
+int t2(string name)
 {
-    st2: cout << "\nВведите имя персонажа: "; //Вводим имя персонажа
-    getline(cin, name);
-    if (name == "") //Если строка пустая, то ошибка
-        goto st2;
     st1: cout << "\n\n\n\n\n"; //Отступ
     cout << "1. Лучник\n";
     cout << "2. Воин\n";
@@ -2524,15 +2713,144 @@ int t1()
     else
         goto st1;
     Races();
+    ofstream ofs(name); //Создаём новый файл
+    ofs.close(); //закрываем поток
     MainMenu(); //Переходим в метод главного меню
+    return 1;
+}
+
+bool checkFile(string file_name) //Метод, проверяющий существование файла
+{
+    ifstream file; //Поток
+    file.open(file_name); //Открываем поток
+    if(!file) { //Если файл не существует, то возвращаем false
+        file.close();
+        return false;
+    }
+    file.close(); //Если файл существует, то возвращаем true
+    return true;
+}
+
+bool ret(string lol) //Метод преобразования строки в bool
+{
+    if (lol == "1") //Если строка = 1, то true
+        return true;
+    else if (lol == "0") //Если строка = 2, то false
+        return false;
+}
+
+int t1()
+{
+    char buffer[MAX_PATH];
+    GetCurrentDirectory(sizeof(buffer),buffer); //Получаем путь текущей дирректории
+    string t = buffer; //Записываем этот путь в string
+    t+="\\Temp"; //Добавляем к string путь до папки
+    dir_path = t; //Путь до ПАПКИ с данными C:/User/..../cmake-build-debug/Temp - там хранятся сохранения игроков
+    const CHAR *t1 = t.c_str(); //Переводим обратно из string в char
+    CreateDirectory(t1,NULL); //Создаем эту папку (ТекущаяДирректория/Temp)
+    st2: cout << "\nВведите имя персонажа: "; //Вводим имя персонажа
+    getline(cin, name);
+    if (name == "") //Если строка пустая, то ошибка
+        goto st2;
+
+    t+="\\"+name+".txt"; //Добавляем к путю файл игрока
+    t1 = t.c_str(); //Переводим эту строку в char
+    bool cher = checkFile(t1); //Проверяем, существует ли файл в этой папке уже
+    path = t1; //Путь до ФАЙЛА С СОХРАНЕНИЕМ с данными КОНКРЕТНОГО ИГРОКА C:/User/..../cmake-build-debug/Temp/login.txt
+    if (!cher) //Если не существует, то игрок выбирает класс и расу, игра с нуля
+        t2(t1);
+    else //Если же существует, то предлагаем игроку начать играть с прошлого сохранения, или начать новую игру
+    {
+        y1: cout << "\nВы уже играли и ваш аккаунт сохранён!";
+        cout << "\nВыберите:";
+        cout << "\n1. Играть с последнего сохранения";
+        cout << "\n2. Начать новую игру (сохранение удаляется)\n";
+        cout << "Выбор: ";
+        string h;
+        cin >> h;
+        if (h == "1") //Если играть с сохранения
+        {
+            string line; //Переменная для считывая
+            int t = 0; //Счётчик
+            std::ifstream in(t1); // окрываем файл для чтения
+            if (in.is_open()) //Если файл открыт
+            {
+                while (getline(in, line)) //Пока поток передаёт строки
+                {
+                    if (t == 0) //В зависимости от счётчика
+                        klass = line; //Записываем в определённую переменную значение из файла
+                    else if (t == 1)
+                        race = line;
+                    else if (t == 2)
+                        health = atof(line.c_str()); //Из строки в double
+                    else if (t == 3)
+                        level = atoi(line.c_str()); //Из строки в int
+                    else if (t == 4)
+                        xp = atoi(line.c_str());
+                    else if (t == 5)
+                        gold = atof(line.c_str());
+                    else if (t == 6)
+                        shlem = ret(line); //Из полученной строки (0 или 1) получаем через ret true or false
+                    else if (t == 7)
+                        grudak = ret(line);
+                    else if (t == 8)
+                        shtany = ret(line);
+                    else if (t == 9)
+                        botinki = ret(line);
+                    else if (t == 10)
+                        magik_or = ret(line);
+                    else if (t == 11)
+                        mozhnoornet = ret(line);
+                    else if (t == 12)
+                        vich = ret(line);
+                    else if (t == 13)
+                        zashita = atof(line.c_str());
+                    else if (t == 14)
+                        magsila = atof(line.c_str());
+                    else if (t == 15)
+                        max_health = atoi(line.c_str());
+                    t++; //Увеличиваем счётчик
+                }
+            }
+            in.close(); //Выходим из потока
+            t=0; //ПОбнуляем счётчик
+            int i = 0; int j2 = 0; //Добавляем переменные для записи армии
+            std::ifstream in2(t1); //Открываем поток
+            if (in2.is_open()) //Если файл открыт
+            {
+                while (getline(in2, line)) //Пока файл передает строки
+                {
+                    if (t > 15 && line != "КОНЕЕЦ!") //Если счётчик больше 15 и файл не достиг конца, то
+                    {
+                        army[i][j2] = line; //Записывамем армию
+                        j2++; //Увеличиваем счётчик армии
+                        if (j2 > 6) { //Если армия закончилась, то обнуляем счётчик и увеличиваем другой счётчик
+                            j2 = 0;
+                            i++;
+                        }
+                    }
+                    t++; //увеличиваем t
+                }
+            }
+            in2.close(); //Закрыааем поток
+            MainMenu(); //Переходим в главное меню
+        }
+        if (h == "2") //Если начать новую игру
+        {
+            remove(t1); //Удаляем файл из папки
+            t2(t1); //Переходим в метод выбора класса и расы, после выбора создасться новый файл
+        }
+        else //Если выбор неверный, то ошибка
+        {
+            cout << "Error\n\n";
+            goto y1;
+        }
+    }
     return 1;
 }
 
 int main()
 {
-    /*SetConsoleCP(1251);//Языковые параметры вывода в консоль
-    SetConsoleOutputCP(1251);
-    setlocale(LC_ALL, "Russian");*/
     system("chcp 65001");
     if (!music.openFromFile("astronomia.ogg")) //Включение фоновой музыки
     { }
