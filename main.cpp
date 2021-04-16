@@ -5,10 +5,15 @@
 #include <random>
 #include <SFML/Audio.hpp>
 #include <fstream>
+#include <cstdlib>
+#include <iostream>
+#include <experimental/filesystem>
+
 
 sf::Music music;
 sf::Music music1;
 //Hello1233
+//fhj
 using namespace std;
 string path="";
 string dir_path="";
@@ -124,6 +129,98 @@ int Soxranenie()
         out << "КОНЕЕЦ!" << std::endl; //Записываем ключевое слово, определяющее конец файла
     }
     out.close(); //Закрываем поток
+}
+void sort (string **x, int m, int v, int k)
+{
+    int z, f;
+    string *temp;
+    for (z = 0; z < v; z++)
+    {
+        for (f = z; f < v; f++)
+        {
+            if (x[z][k] > x[f][k])
+            {
+                temp = x[z];
+                x[z] = x[f];
+                x[f] = temp;
+            }
+        }
+    }
+}
+
+int leadertable()
+{
+    int kol = 0; //переменная для подсчета файлов
+  WIN32_FIND_DATA FindFileData;
+  string localpath = "C:\\Users\\pakon\\CLionProjects\\Game\\cmake-build-debug\\Temp\\*.txt*";
+  HANDLE hFind = FindFirstFile(localpath.c_str(), &FindFileData);
+  if (hFind == INVALID_HANDLE_VALUE)
+  {
+      return 1;
+  }
+  else
+  {
+      kol = (std::size_t)std::distance(std::experimental::filesystem::directory_iterator{dir_path}, std::experimental::filesystem::directory_iterator{});
+      string **table = new string* [kol];
+      for (int y = 0; y < kol; y++)
+      {
+          table[y] = new string[3];
+      }
+
+      int i = 0, xp = 0, l = 0;
+      do
+      {
+          string filename = FindFileData.cFileName;
+          size_t pos = filename.find(".");
+          string extractName = (string::npos == pos)?filename : filename.substr(0, pos);
+          table[i][0] = extractName;
+          string line; //Переменная для считывая
+          int t = 0; //Счётчик
+          std::ifstream in(dir_path + "\\" + (FindFileData.cFileName)); // окрываем файл для чтения
+          if (in.is_open()) //Если файл открыт
+          {
+              while (getline(in, line)) //Пока поток передаёт строки
+              {
+                  if (t == 3)
+                      table[l][1] = line.c_str(); //Из строки в int
+                  else if (t == 4)
+                      table[l][2] = line.c_str();
+                  t++; //Увеличиваем счётчик
+              }
+          }
+          in.close(); //Выходим из потока
+          l++;
+          i++;
+
+      } while (FindNextFile(hFind, &FindFileData));
+      FindClose(hFind);
+      int k = kol;
+      sort(table, kol, 3, k);
+      for (int l = 0; l < kol; l++)
+      {
+          for (int o = 0; o < 3; o++)
+          {
+              cout << table[l][o] << "\t";
+          }
+          cout << endl;
+      }
+      for (int c = 0; c < kol; c++)
+      {
+          delete[] table[c];
+      }
+
+      char ch;
+      int code;
+      cout << "\n\nДля возврата в меню - нажмите Enter"; //предлагаем вернуться в меню
+      while (1)
+      {
+          ch = _getch();
+          code = static_cast<int>(ch);
+          if (ch == 13) // если клавиша Enter
+              return 1;
+      }
+  }
+
 }
 
 int Random1(int a,int b)
@@ -1865,6 +1962,8 @@ int DangeEvents()
     return res1;
 }
 
+
+
 int Dange() //выбор данжа
 {
     pjkl:
@@ -2579,7 +2678,9 @@ void MainMenu()
     }
     else if (vib == "9")
     {
-
+        system("cls");
+        leadertable();
+        MainMenu();
     }
     else if (vib == "10") //Ручное сохранение процесса игры
     {
@@ -2791,7 +2892,7 @@ int t1()
                         gold = atof(line.c_str());
                     else if (t == 6)
                         shlem = ret(line); //Из полученной строки (0 или 1) получаем через ret true or false
-                    else if (t == 7)
+                    else if (t == 7) //хуета
                         grudak = ret(line);
                     else if (t == 8)
                         shtany = ret(line);
