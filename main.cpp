@@ -130,19 +130,19 @@ int Soxranenie()
     }
     out.close(); //Закрываем поток
 }
-void sort (string **x, int m, int v, int k)
+void sort (string **x, int m, int n, int k)
 {
-    int z, f;
+    int i, j; //сортировка массива
     string *temp;
-    for (z = 0; z < v; z++)
+    for (i = 0; i < n; i++)
     {
-        for (f = z; f < v; f++)
+        for (j = i; j < n; j++)
         {
-            if (x[z][k] > x[f][k])
+            if (x[i][k] > x[j][k])
             {
-                temp = x[z];
-                x[z] = x[f];
-                x[f] = temp;
+                temp = x[j];
+                x[i][k] = x[j][k];
+                x[j] = temp;
             }
         }
     }
@@ -152,29 +152,31 @@ int leadertable()
 {
     int kol = 0; //переменная для подсчета файлов
   WIN32_FIND_DATA FindFileData;
-  string localpath = "C:\\Users\\pakon\\CLionProjects\\Game\\cmake-build-debug\\Temp\\*.txt*";
-  HANDLE hFind = FindFirstFile(localpath.c_str(), &FindFileData);
+  string localpath = "C:\\Users\\pakon\\CLionProjects\\Game\\cmake-build-debug\\Temp\\*.txt*";//путь до папки с файлами сохранения
+  HANDLE hFind = FindFirstFile(localpath.c_str(), &FindFileData); //поток поиска файлов
   if (hFind == INVALID_HANDLE_VALUE)
   {
       return 1;
   }
   else
   {
-      kol = (std::size_t)std::distance(std::experimental::filesystem::directory_iterator{dir_path}, std::experimental::filesystem::directory_iterator{});
-      string **table = new string* [kol];
+      int m; //пременная для инициализации таблицы лидеров
+      int n = 3;//пременная для инициализации таблицы лидеров
+      m = kol = (std::size_t)std::distance(std::experimental::filesystem::directory_iterator{dir_path}, std::experimental::filesystem::directory_iterator{});
+      string **table = new string* [m];
       for (int y = 0; y < kol; y++)
       {
-          table[y] = new string[3];
+          table[y] = new string[n]; //создание массива
       }
 
-      int i = 0, xp = 0, l = 0;
+      int i = 0, l = 0;//переменные счетчики
       do
       {
-          string filename = FindFileData.cFileName;
-          size_t pos = filename.find(".");
-          string extractName = (string::npos == pos)?filename : filename.substr(0, pos);
-          table[i][0] = extractName;
-          string line; //Переменная для считывая
+          string filename = FindFileData.cFileName;//переменная для хранения имени файла
+          size_t pos = filename.find("."); //поиск точки в имени файла
+          string extractName = (string::npos == pos)?filename : filename.substr(0, pos);//взятие имени файла без расширения
+          table[i][0] = extractName;//добавление имени игрока в массив
+          string line; //Переменная для считывания
           int t = 0; //Счётчик
           std::ifstream in(dir_path + "\\" + (FindFileData.cFileName)); // окрываем файл для чтения
           if (in.is_open()) //Если файл открыт
@@ -182,7 +184,7 @@ int leadertable()
               while (getline(in, line)) //Пока поток передаёт строки
               {
                   if (t == 3)
-                      table[l][1] = line.c_str(); //Из строки в int
+                      table[l][1] = line.c_str();
                   else if (t == 4)
                       table[l][2] = line.c_str();
                   t++; //Увеличиваем счётчик
@@ -192,22 +194,22 @@ int leadertable()
           l++;
           i++;
 
-      } while (FindNextFile(hFind, &FindFileData));
-      FindClose(hFind);
-      int k = kol;
-      sort(table, kol, 3, k);
-      for (int l = 0; l < kol; l++)
+      } while (FindNextFile(hFind, &FindFileData)); //цикл "пока" не закончатся файлы в папке
+      FindClose(hFind); //закрытие потока чтения
+
+      int k = 3;
+      sort(table, m, n, k - 1);//метод для сортировки таблицы лидеров
+
+
+      for (int l = 0; l < m; l++)//вывод массива
       {
-          for (int o = 0; o < 3; o++)
+          for (int o = 0; o < 2; o++)
           {
               cout << table[l][o] << "\t";
           }
           cout << endl;
       }
-      for (int c = 0; c < kol; c++)
-      {
-          delete[] table[c];
-      }
+
 
       char ch;
       int code;
