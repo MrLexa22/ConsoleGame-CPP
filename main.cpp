@@ -138,7 +138,7 @@ void sort (string **x, int m, int n, int k)
     {
         for (j = i; j < n; j++)
         {
-            if (x[i][k] > x[j][k])
+            if (atoi(x[i][k].c_str()) > atoi(x[j][k].c_str()))
             {
                 temp = x[j];
                 x[i][k] = x[j][k];
